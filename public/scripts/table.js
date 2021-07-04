@@ -87,7 +87,6 @@ const verifierPassword = () => {
 
 const verifierEmail = () => {
   const at = email.value.indexOf("@");
-  const firstDot = email.value.indexOf(".");
 
   // Verificação de espaços
   if (email.value.indexOf(" ") != -1) {
@@ -109,19 +108,17 @@ const verifierEmail = () => {
   }
 
   // Verificação do caracter .
-  if (firstDot == -1) {
-    emailError.innerHTML = 'Email inválido! Caracter "." não encontrado!';
-  }
-  for (var i = at; i < email.value.length; i++) {
-    if (
-      ("." == email.value[i] && "." == email.value[i + 1]) ||
-      email.value.lastIndexOf(".") == email.value.length - 1 ||
-      firstDot == at + 1
-    ) {
-      emailError.innerHTML =
-        'Email inválido! Insira o caracter "." na posição correta!';
-      return false;
-    }
+  const domain = email.value.slice(email.value.indexOf("@"));
+  const dot = domain.indexOf(".");
+  console.log(dot)
+  if (
+    dot <= 1 ||
+    domain.lastIndexOf(".") == domain.length - 1 ||
+    domain.indexOf("..") != -1
+  ) {
+    emailError.innerHTML =
+      'Email inválido! Insira o caracter "." na posição correta!';
+    return false;
   }
 
   // Verificação se o E-mail já foi cadastrado
