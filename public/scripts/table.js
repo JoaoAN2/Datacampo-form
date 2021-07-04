@@ -192,7 +192,7 @@ const events = () => {
   }
 };
 
-const email = document.getElementById("email-input");
+const email = document.getElementById("email-input")
 const emailError = email.parentNode.querySelector("p");
 
 events();
