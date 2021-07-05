@@ -154,7 +154,7 @@ const checkEmail = () => {
 const getAge = birthday => {
   const today = [
     new Date().getFullYear(),
-    new Date().getMonth(),
+    new Date().getMonth() + 1,
     new Date().getDate(),
   ];
   const birthdayArray = birthday.split("-");
@@ -202,7 +202,7 @@ const clearInput = () => {
   var inputs = document.querySelectorAll("input");
   var boolean = true;
   for (key in dataUser()) {
-    if (dataUser()[key] == "" && cont < 6) {
+    if (dataUser()[key] == "") {
       const parent = inputs[cont].parentNode;
       addClassError(parent.querySelector("input"), parent.querySelector("p"));
       parent.querySelector("p").innerHTML = "Campo Vazio";

@@ -42,22 +42,51 @@ const searchCEP = async () => {
     const dataPromisse = await fetch(url);
     const addressObject = await dataPromisse.json();
     if (addressObject.hasOwnProperty("erro")) {
-      cep_error.innerHTML = "CEP não encontrado";
-      cep_error.classList.add("error");
-      address.value = "Não encontrado";
       document.getElementById("cep-input").classList.add("error");
+      erroFormat();
     } else {
       fillForm(addressObject);
-      cep_error.innerHTML = "";
-      cep_error.classList.remove("error");
-      document.getElementById("cep-input").classList.remove("error");
+      sucessFormat();
     }
   } else {
-    address.value = "Não encontrado";
-    cep_error.innerHTML = "CEP Inválido";
-    cep_error.classList.add("error");
-    document.getElementById("cep-input").classList.add("error");
+    erroFormat();
   }
 };
+
+const erroFormat = () => {
+  address.classList.add("error"); 
+  address_error.classList.add("error"); 
+  address_error.innerHTML = "Inválido"; 
+
+  bairro.classList.add("error");
+  bairro_error.classList.add("error");
+  bairro_error.innerHTML = "Inválido";
+
+  city.classList.add("error");
+  city_error.classList.add("error");
+  city_error.innerHTML = "Inválido";
+  
+  state.classList.add("error");
+  state_error.classList.add("error");
+  state_error.innerHTML = "Inválido";
+}
+
+const sucessFormat = () => {
+  address.classList.remove("error"); 
+  address_error.classList.remove("error"); 
+  address_error.innerHTML = ""; 
+
+  bairro.classList.remove("error");
+  bairro_error.classList.remove("error");
+  bairro_error.innerHTML = "";
+  
+  city.classList.remove("error");
+  city_error.classList.remove("error");
+  city_error.innerHTML = "";
+  
+  state.classList.remove("error");
+  state_error.classList.remove("error");
+  state_error.innerHTML = "";
+}
 
 document.getElementById("cep-input").addEventListener("focusout", searchCEP);
