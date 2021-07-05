@@ -41,12 +41,47 @@ p.error {
   text-align: center;
   margin: auto;
   border: 1px solid red;
-  border-radius: 1.1rem;
+  border-radius: 0.5rem;
 }
 
 input.error {
   border-color: rgb(252, 120, 120);
   background-color: #f7b7b7;
+}
+
+div.send-div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+  max-width: 20rem;
+  margin: 3rem auto;
+  height: 3rem;
+  border-radius: 0.5rem;
+  
+}
+
+div.sucess {
+  border: 1px solid rgb(2, 71, 2);
+  background-color: rgb(103, 209, 147);
+}
+
+div.failed {
+  border: 1px solid red;
+  background-color: #f7b7b7;
+}
+
+p.send-message {
+  margin: 0;
+  text-align: center;
+}
+
+p.sucess{
+  color: rgb(1, 95, 1);
+}
+
+p.failed {
+  color: red;
 }
 
 @media (min-width: 768px) {

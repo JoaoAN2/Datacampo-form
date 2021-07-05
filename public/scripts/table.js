@@ -66,7 +66,7 @@ function save() {
 }
 
 // Verificação da senha.
-const verifierPassword = () => {
+const checkPassword = () => {
   const password = document.getElementById("password-input");
   const p_password = document.getElementById("password-error");
 
@@ -100,7 +100,7 @@ const verifierPassword = () => {
 };
 
 // Verificação do campo de Email.
-const verifierEmail = () => {
+const checkEmail = () => {
   const email = document.getElementById("email-input");
   const emailError = email.parentNode.querySelector("p");
   const at = email.value.indexOf("@");
@@ -140,16 +140,48 @@ const verifierEmail = () => {
   // Verificação se o E-mail já foi cadastrado.
   for (var i = 0; i < allDataUser.length; i++) {
     if (dataUser().emailAddress == allDataUser[i].emailAddress) {
+      addClassError(email, emailError);
       emailError.innerHTML = "Email já cadastrado";
       return false;
     }
   }
 
   // E-mail passou por todas as verificações.
-  email.classList.remove("error");
-  emailError.classList.remove("error");
   emailError.innerHTML = "";
   return true;
+};
+
+const getAge = birthday => {
+  const today = [
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    new Date().getDate(),
+  ];
+  const birthdayArray = birthday.split("-");
+  var age = today[0] - birthdayArray[0];
+  if (
+    today[1] < birthdayArray[1] ||
+    (today[1] == birthdayArray[1] && today[2] < birthdayArray[2])
+  ) {
+    age--;
+  }
+  return age;
+}
+
+// Verificação maior de idade (18 anos)
+const checkAge = () => {
+  const birthdayInput = document.getElementById("birthday-input");
+  const birthdayError = document.getElementById("birthday-error");
+  const age = getAge(birthdayInput.value);
+  if(age < 18){
+    addClassError(birthdayInput, birthdayError);
+    birthdayError.innerHTML = "Menor de idade";
+    return false;
+  } else {
+    removeClassError(birthdayInput, birthdayError);
+    birthdayError.innerHTML = "";
+    return true;
+  }
 };
 
 // Adicionar formatação de erro no campo inválido.
@@ -170,7 +202,7 @@ const clearInput = () => {
   var inputs = document.querySelectorAll("input");
   var boolean = true;
   for (key in dataUser()) {
-    if (dataUser()[key] == "") {
+    if (dataUser()[key] == "" && cont < 6) {
       const parent = inputs[cont].parentNode;
       addClassError(parent.querySelector("input"), parent.querySelector("p"));
       parent.querySelector("p").innerHTML = "Campo Vazio";
@@ -181,11 +213,32 @@ const clearInput = () => {
   return boolean;
 };
 
+const clear = () => {
+  const inputs = document.querySelectorAll("input");
+  for(key of inputs) {
+    key.value = "";
+  }
+}
+
 // Validação do formulário antes de adicionar o usuário
 function validation() {
-  var send = clearInput() && verifierEmail() && verifierPassword();
+  var send = clearInput() && checkEmail() && checkPassword() && checkAge();
+  const messageDiv = document.getElementById("send-div");
+  const message = document.getElementById("send-message");
   if (send) {
+    messageDiv.classList.remove("failed");
+    message.classList.remove("failed");
+    messageDiv.classList.add("sucess");
+    message.classList.add("success");
+    message.innerHTML = "Formulário enviado com sucesso";
     addUser();
+    clear();
+  } else {
+    messageDiv.classList.remove("sucess");
+    message.classList.remove("sucess");
+    messageDiv.classList.add("failed");
+    message.classList.add("failed");
+    message.innerHTML = "Erro! dados incorretos!"
   }
 }
 
@@ -193,21 +246,30 @@ const events = () => {
   // Evento verificação de senha
   document
     .getElementById("password-input")
-    .addEventListener("focusout", verifierPassword);
+    .addEventListener("focusout", checkPassword);
 
   // Evento verificação de Email
+  document.getElementById("email-input").addEventListener("focusout", () => {
+    if (!checkEmail()) {
+      addClassError(
+        document.getElementById("email-input"),
+        document.getElementById("email-error")
+      );
+    } else {
+      removeClassError(
+        document.getElementById("email-input"),
+        document.getElementById("email-error")
+      );
+    }
+  });
+
+  // Evento verificar idade
   document
-    .getElementById("email-input")
-    .addEventListener("focusout", () => {
-      if (!verifierEmail()) {
-        addClassError(document.getElementById("email-input"), document.getElementById("email-error"));
-      } else {
-        removeClassError(document.getElementById("email-input"), document.getElementById("email-error"));
-      }
-    });
+    .getElementById("birthday-input")
+    .addEventListener("focusout", checkAge);
 
   // Evento "Não enviar o formulário"
-  document.querySelector("form").addEventListener("submit", (event) => {
+  document.querySelector("form").addEventListener("submit", event => {
     event.preventDefault();
   });
 
@@ -215,7 +277,7 @@ const events = () => {
   const fields = document.querySelectorAll("[required]");
 
   for (field of fields) {
-    field.addEventListener("focusout", (event) => {
+    field.addEventListener("focusout", event => {
       const errorText = event.target.parentNode.querySelector("p");
       if (event.target.value == "") {
         addClassError(event.target, errorText);
@@ -227,12 +289,11 @@ const events = () => {
     });
 
     // Remover o Bubble
-    field.addEventListener("invalid", (event) => {
+    field.addEventListener("invalid", event => {
       event.preventDefault();
     });
   }
 };
 
 events();
-
 renderTable();
