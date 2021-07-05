@@ -18,7 +18,6 @@ const allDataUser = JSON.parse(localStorage.getItem("list_users")) || [];
 
 function renderTable() {
   const table = document.getElementById("table");
-  console.log(table);
   if (allDataUser.length > 0) {
     const title_table = document.getElementById("title-table");
     title_table.innerHTML = "Dados registrados no formulário";
@@ -152,8 +151,12 @@ const addClassError = (inputError, pError) => {
   pError.classList.add("error");
 };
 
+const removeClassError = (inputError, pError) => {
+  inputError.classList.remove("error");
+  pError.classList.remove("error");
+};
+
 const clearInput = () => {
-  console.log("Chegou aqui irmão");
   var cont = 0;
   var inputs = document.querySelectorAll("input");
   var boolean = true;
@@ -180,14 +183,27 @@ const events = () => {
   document
     .getElementById("password-input")
     .addEventListener("focusout", verifierPassword);
+
   document
     .getElementById("email-input")
     .addEventListener("focusout", addClassErrorEmail);
+
   document.querySelector("form").addEventListener("submit", (event) => {
     event.preventDefault();
   });
+
   const fields = document.querySelectorAll("[required]");
   for (field of fields) {
+    field.addEventListener("focusout", (event) => {
+      const errorText = event.target.parentNode.querySelector("p");
+      if (event.target.value == "") {
+        addClassError(event.target, errorText);
+        errorText.innerHTML = "Campo Vazio!";
+      } else {
+        removeClassError(event.target, errorText);
+        errorText.innerHTML = "";
+      }
+    });
     field.addEventListener("invalid", (event) => {
       event.preventDefault();
     });
