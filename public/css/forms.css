@@ -5,6 +5,7 @@ html {
 h1 {
   text-align: center;
   line-height: 2;
+  margin-top: 2rem;
   border-bottom: 1px solid #d3e2e5;
   margin-bottom: 2rem;
 }
@@ -49,6 +50,10 @@ input.error {
 }
 
 @media (min-width: 768px) {
+  h1 {
+    margin-top: 0rem;
+  }
+
   form {
     margin: 6.4rem auto;
     background: white;

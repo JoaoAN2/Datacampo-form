@@ -21,7 +21,7 @@ const fillForm = (addressObject) => {
   state.value = addressObject.uf;
 };
 
-const cepValido = (cep) => cep.length == 8;
+const cepValido = cep => cep.length == 8;
 
 const searchCEP = async () => {
   address.value = "";

@@ -1,3 +1,4 @@
+// Dados do formulário.
 const dataUser = () => {
   return {
     name: document.getElementById("name").value,
@@ -14,8 +15,10 @@ const dataUser = () => {
   };
 };
 
+// Declarando o array que vai conter todos os usuários.
 const allDataUser = JSON.parse(localStorage.getItem("list_users")) || [];
 
+// Renderizando a tabela de usuários.
 function renderTable() {
   const table = document.getElementById("table");
   if (allDataUser.length > 0) {
@@ -50,44 +53,56 @@ function renderTable() {
   }
 }
 
+// Adicionando o usuário no array.
 function addUser() {
   allDataUser.push(dataUser());
   renderTable();
   save();
 }
 
+// Salvando o array.
 function save() {
   localStorage.setItem("list_users", JSON.stringify(allDataUser));
 }
 
+// Verificação da senha.
 const verifierPassword = () => {
   const password = document.getElementById("password-input");
   const p_password = document.getElementById("password-error");
+
   const regex = {
     number: /[0-9]/,
     lowerCase: /[a-z]/,
     upperCase: /[A-Z]/,
   };
+
+  // Senha possui o tamanho mínimo adequado
   var passwordBoolean = password.value.length >= 6;
+
+  // Senha válida
   if (
     passwordBoolean &&
     regex.number.test(password.value) &&
     (regex.lowerCase.test(password.value) ||
       regex.upperCase.test(password.value))
   ) {
-    password.classList.remove("error");
-    p_password.classList.remove("error");
+    removeClassError(password, p_password);
     p_password.innerHTML = "";
     return true;
-  } else {
-    password.classList.add("error");
-    p_password.classList.add("error");
+  }
+
+  // Senha inválida
+  else {
+    addClassError(password, p_password);
     p_password.innerHTML = "Mínimo 1 letra, 1 número e 6 caracteres";
     return false;
   }
 };
 
+// Verificação do campo de Email.
 const verifierEmail = () => {
+  const email = document.getElementById("email-input");
+  const emailError = email.parentNode.querySelector("p");
   const at = email.value.indexOf("@");
 
   // Verificação de espaços
@@ -122,7 +137,7 @@ const verifierEmail = () => {
     return false;
   }
 
-  // Verificação se o E-mail já foi cadastrado
+  // Verificação se o E-mail já foi cadastrado.
   for (var i = 0; i < allDataUser.length; i++) {
     if (dataUser().emailAddress == allDataUser[i].emailAddress) {
       emailError.innerHTML = "Email já cadastrado";
@@ -130,32 +145,26 @@ const verifierEmail = () => {
     }
   }
 
-  // E-mail passou por todas as verificações
+  // E-mail passou por todas as verificações.
   email.classList.remove("error");
   emailError.classList.remove("error");
   emailError.innerHTML = "";
   return true;
 };
 
-const addClassErrorEmail = () => {
-  if (!verifierEmail()) {
-    email.classList.add("error");
-    emailError.classList.add("error");
-    return false;
-  }
-  return true;
-};
-
+// Adicionar formatação de erro no campo inválido.
 const addClassError = (inputError, pError) => {
   inputError.classList.add("error");
   pError.classList.add("error");
 };
 
+// Remover formatação de erro no campo válido.
 const removeClassError = (inputError, pError) => {
   inputError.classList.remove("error");
   pError.classList.remove("error");
 };
 
+// Verificação se possui campos vazios antes de enviar o formulário.
 const clearInput = () => {
   var cont = 0;
   var inputs = document.querySelectorAll("input");
@@ -172,27 +181,39 @@ const clearInput = () => {
   return boolean;
 };
 
+// Validação do formulário antes de adicionar o usuário
 function validation() {
-  var send = clearInput() && addClassErrorEmail() && verifierPassword();
+  var send = clearInput() && verifierEmail() && verifierPassword();
   if (send) {
     addUser();
   }
 }
 
 const events = () => {
+  // Evento verificação de senha
   document
     .getElementById("password-input")
     .addEventListener("focusout", verifierPassword);
 
+  // Evento verificação de Email
   document
     .getElementById("email-input")
-    .addEventListener("focusout", addClassErrorEmail);
+    .addEventListener("focusout", () => {
+      if (!verifierEmail()) {
+        addClassError(document.getElementById("email-input"), document.getElementById("email-error"));
+      } else {
+        removeClassError(document.getElementById("email-input"), document.getElementById("email-error"));
+      }
+    });
 
+  // Evento "Não enviar o formulário"
   document.querySelector("form").addEventListener("submit", (event) => {
     event.preventDefault();
   });
 
+  // Evento de validação dos campos
   const fields = document.querySelectorAll("[required]");
+
   for (field of fields) {
     field.addEventListener("focusout", (event) => {
       const errorText = event.target.parentNode.querySelector("p");
@@ -204,14 +225,13 @@ const events = () => {
         errorText.innerHTML = "";
       }
     });
+
+    // Remover o Bubble
     field.addEventListener("invalid", (event) => {
       event.preventDefault();
     });
   }
 };
-
-const email = document.getElementById("email-input");
-const emailError = email.parentNode.querySelector("p");
 
 events();
 
