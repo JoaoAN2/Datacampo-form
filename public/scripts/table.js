@@ -18,10 +18,12 @@ const allDataUser = JSON.parse(localStorage.getItem("list_users")) || [];
 
 function renderTable() {
   const table = document.getElementById("table");
+  console.log(table);
   if (allDataUser.length > 0) {
-    const div_table = document.getElementById("table-div");
-    div_table.innerHTML = "<h1>Dados registrados no formulário</h1>";
+    const title_table = document.getElementById("title-table");
+    title_table.innerHTML = "Dados registrados no formulário";
     table.innerHTML =
+      "<thead>" +
       "<tr>" +
       "<th scope=col>Nome</th>" +
       "<th scope=col>Sobrenome</th>" +
@@ -34,7 +36,8 @@ function renderTable() {
       "<th scope=col>Cidade</th>" +
       "<th scope=col>UF</th>" +
       "<th scope=col>Data de Nascimento</th>" +
-      "</tr>";
+      "</tr>" +
+      "</thead>";
   }
   for (const data of allDataUser) {
     const newLineTable = document.createElement("tr");
@@ -110,7 +113,6 @@ const verifierEmail = () => {
   // Verificação do caracter .
   const domain = email.value.slice(email.value.indexOf("@"));
   const dot = domain.indexOf(".");
-  console.log(dot)
   if (
     dot <= 1 ||
     domain.lastIndexOf(".") == domain.length - 1 ||

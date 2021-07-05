@@ -1,4 +1,21 @@
-div.table-div {
-    margin: auto;
-    text-align: center;
+h1#title-table {
+  margin: auto;
+  text-align: center;
+  text-decoration: none;
+}
+
+table {
+  margin: auto;
+  border: 1px solid #d3e2e5;
+}
+
+footer {
+  margin: 2.5rem;
+  font-size: 2rem;
+  text-align: center;
+  font-style: italic;
+}
+
+a {
+  text-decoration: none;
 }
